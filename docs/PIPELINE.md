@@ -28,16 +28,10 @@ subfolder, two 68MB classification parquets) were sitting unused. Confirmed by c
 file's basename against the literal source of all 18 kept notebooks + `src/*.py` before deleting
 anything. What's left in `results/` (~40MB) is exactly what `21`–`23` and `30`–`32` read or write.
 
-## Paper mapping
-
-- **Paper 1** (event identification/classification, SIGDSA/pre-ICIS 2026): `00`–`23`, i.e.
-  taxonomy construction, entity linking, dictionary building, and article classification.
-- **Paper 2** (severity measurement, Electronic Markets): `30`–`32`, i.e. emotion-peak
-  detection, the event study, and cross-tabulation/SCCT analysis.
 
 This split is inferred from notebook content and naming, not dictated — correct it if it's wrong.
 
-## Stage 1 — Taxonomy, dictionary, entity linking (Paper 1)
+## Stage 1 — Taxonomy, dictionary, entity linking
 
 | Notebook | Reads | Writes |
 |---|---|---|
@@ -55,7 +49,7 @@ This split is inferred from notebook content and naming, not dictated — correc
 Manual review steps behind `15`/`16` are documented in [MANUAL_REVIEW.md](MANUAL_REVIEW.md)
 (entity-linking correctness review, coverage review).
 
-## Stage 2 — Labeling and classification (Paper 1)
+## Stage 2 — Labeling and classification 
 
 | Notebook | Reads | Writes |
 |---|---|---|
@@ -73,7 +67,7 @@ reported classification metrics — see [MANUAL_REVIEW.md](MANUAL_REVIEW.md) for
 classification logic on two example articles (CrowdStrike, AstraZeneca). It does not feed the
 pipeline and is not required to reproduce results — kept for auditing the method.
 
-## Stage 3 — Emotion peaks, event study, cross-tabulation (Paper 2)
+## Stage 3 — Emotion peaks, event study, cross-tabulation
 
 | Notebook | Reads | Writes |
 |---|---|---|
@@ -89,7 +83,7 @@ pipeline and is not required to reproduce results — kept for auditing the meth
   MSCI World index: estimation window [-210, -11] trading days, event window [-1, +5], significance
   via the BMP test and the Wilcoxon signed-rank test. Firm-level prices are fetched via `yfinance`
   and cached at `results/phase_iv/price_cache_v4_acwi.parquet`.
-- `32` cross-tabulates peaks against SCCT clusters/tiers for the paper's appendix tables. It
+- `32` cross-tabulates peaks against SCCT clusters/tiers for the appendix tables. It
   contains its own internal crisis-type classification (`classify_crisis_type()`), which is why
   a separate crisis-typing step isn't needed between `30` and `31` — see note below.
 
