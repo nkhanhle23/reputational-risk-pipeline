@@ -9,7 +9,7 @@ risk events from news text.
 notebooks/   17 pipeline notebooks (numbered, execution order below) + 1 illustrative demo
 src/         reputational_risk_pipeline package (classification, dictionary, matching, config)
 docs/
-  PIPELINE.md        notebook-by-notebook data lineage, Paper 1 / Paper 2 mapping
+  PIPELINE.md        notebook-by-notebook data lineage
   MANUAL_REVIEW.md   human annotation/review/audit steps behind the automated pipeline
 data/        raw + preprocessed article data, review samples (gitignored, ~0.8GB)
 embeddings/  cached sentence/keyword embeddings (gitignored, ~1.6GB)
