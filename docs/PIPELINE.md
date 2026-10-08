@@ -59,7 +59,7 @@ Manual review steps behind `15`/`16` are documented in [MANUAL_REVIEW.md](MANUAL
 
 | Notebook | Reads | Writes |
 |---|---|---|
-| `21_provisional_multi_labelling.ipynb` | not captured; also reads `data/samples_reviewed/rule_classification_validation_sample_reviewed.csv`, which **does not exist on disk** — flagging rather than guessing, same as the `01_org_match` note above | provisional multi-label samples under `data/samples/` |
+| `21_provisional_multi_labelling.ipynb` | `data/01_preprocessed/articles_entity_linked_cleaned.parquet` (rebuilds the sentence-level dataset from this on every run); also reads `data/samples_reviewed/rule_classification_validation_sample_reviewed.csv`, which **does not exist on disk** — flagging rather than guessing, same as the `01_org_match` note above | `data/01_preprocessed/sentences_entity_linked_cleaned.parquet` (rebuilt sentence-level data, title+summary regex-split), `results/phase ii/21_provisionally_labeled_train_set_v4.parquet` |
 | `22a_create_test_validation_sets.ipynb` | not captured | test/validation sets under `data/samples/` |
 | `22_cross_validation_analysis.ipynb` | not captured | threshold sweeps, confusion matrices, `comprehensive_comparison.csv` etc. under `results/cross_validation_analysis/` — **canonical** CV notebook, referenced by `23` for its chosen confidence threshold. (A `22_cross_validation_v3.ipynb` existed as an older/alternate run not referenced by `23` and has been removed.) |
 | `23_full_dataset_classification.ipynb` | `data/01_preprocessed/sentences_entity_linked_cleaned.parquet`, `results/phase i/13_final_dictionary_v4.csv`, `data/samples_reviewed/labelled_set_final.csv` | `results/full_dataset_classification/full_dataset_labeled.parquet` |
@@ -69,6 +69,15 @@ threshold τ = 0.40 (articles below threshold → "No Event"), applied after amb
 resolution. `data/samples_reviewed/labelled_set_final.csv` is the ground-truth set used for its
 reported classification metrics — see [MANUAL_REVIEW.md](MANUAL_REVIEW.md) for how it was built.
 
+**`21`'s sentence-level dataset is rebuilt from scratch on every run**, not loaded as a static
+file. There used to be no code anywhere in this repo (or its git history) that produced
+`sentences_entity_linked_cleaned.parquet` — it existed only as a stale, orphaned file from some
+earlier, uncommitted process, carrying a pre-`16`-quality-filter article count (19,659 instead of
+the correct 19,556). `21` now regenerates it directly from `articles_entity_linked_cleaned.parquet`
+(title + summary, regex sentence-split) at the top of the notebook, so it always matches the
+current article set, and the cached sentence/keyword embeddings are auto-invalidated if the
+rebuilt sentence count doesn't match the cache. `22` and `23` both read the resulting file as-is.
+
 `demo_article_classification.ipynb` is a standalone, illustrative walkthrough of the Stage 1/2
 classification logic on two example articles (CrowdStrike, AstraZeneca). It does not feed the
 pipeline and is not required to reproduce results — kept for auditing the method.
@@ -77,7 +86,7 @@ pipeline and is not required to reproduce results — kept for auditing the meth
 
 | Notebook | Reads | Writes |
 |---|---|---|
-| `30_organization_emotion_profiles.ipynb` | `data/01_preprocessed/entity_matches_cleaned.parquet`, `data/01_preprocessed/sentences_entity_linked_cleaned.parquet`, `results/full_dataset_classification/full_dataset_labeled.parquet` | `results/phase_iii/organization_daily_emotions_v2.parquet`, `results/phase_iii/all_peaks_loose_threshold.{parquet,csv}`, `results/phase_iii/validation_sample_peaks.csv` (manual-review sample; only regenerated if it doesn't already exist, so a rerun won't overwrite your annotations) |
+| `30_organization_emotion_profiles.ipynb` | `data/01_preprocessed/entity_matches_cleaned.parquet`, `data/01_preprocessed/sentences_entity_linked_cleaned.parquet`, `results/full_dataset_classification/full_dataset_labeled.parquet` | `results/phase_iii/organization_daily_emotions_v2.parquet`, `results/phase_iii/all_peaks_loose_threshold.{parquet,csv}`, `data/samples/validation_sample_peaks.csv` (manual-review sample; only regenerated if it doesn't already exist, so a rerun won't overwrite your annotations) |
 | `31_event_study.ipynb` | `data/00_raw/msci_world.csv`, `results/phase_iii/all_peaks_loose_threshold.parquet`, `results/phase_iv/price_cache_v4_acwi.parquet` | `results/phase_iv/event_study_results_v3.parquet` + CSV/tex summaries (robustness, sector, region, placebo test) |
 | `32_cross_tabulation.ipynb` | `results/phase_iii/all_peaks_loose_threshold.parquet`, `results/phase_iv/event_study_results_v3.parquet` | `results/phase_iv/crosstab_results.csv`, SCCT pair-margin tables, `paper_crosstab_table.csv` |
 

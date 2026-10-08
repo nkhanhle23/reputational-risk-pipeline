@@ -51,10 +51,10 @@ in the paper, it isn't derived from anything in this repo.
 
 ## 5. Emotion-peak / crisis validation (feeds `30`–`32`)
 
-**Not done yet.** `results/phase_iii/validation_sample_peaks.csv` (152 peaks) is written directly
-by `30_organization_emotion_profiles.ipynb`, which checks whether this file already exists before
-regenerating it — so once a real manual annotation exists, a full pipeline rerun won't overwrite
-it.
+**Not done yet.** `data/samples/validation_sample_peaks.csv` (50 peaks, stratified by dominant
+emotion) is written directly by `30_organization_emotion_profiles.ipynb`, which checks whether
+this file already exists before regenerating it — so once a real manual annotation exists, a full
+pipeline rerun won't overwrite it.
 
 Earlier drafts of this doc described a 50-peak sample as manually reviewed across three files
 (`emotion_validation_sample_labeled.csv`, `emotion_validation_with_taxonomy_reasoning.csv`,
